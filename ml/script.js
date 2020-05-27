@@ -1,17 +1,19 @@
-let net;
 const video = document.getElementById('video');
+var webcam;
+var running = true;
 
 async function app() {
-  console.log('Loading MobileNet...');
-  net = await mobilenet.load();
-  console.log('Successfully loaded MobileNet.');
+  document.getElementById('top').innerText = "Loading MobileNet...";
+  let net = await mobilenet.load();
+  document.getElementById('top').innerText = "MobileNet ready";
 
-  const webcam = await tf.data.webcam(video);
-  while (true) {
+  webcam = await tf.data.webcam(video);
+  while (running) {
     const img = await webcam.capture();
+    document.getElementById('top').innerText = "Webcam open";
     const result = await net.classify(img);
 
-    document.getElementById('console').innerText = `
+    document.getElementById('bottom').innerText = `
       prediction: ${result[0].className}\n
       probability: ${result[0].probability}
     `;
@@ -21,5 +23,17 @@ async function app() {
     await tf.nextFrame();
   }
 }
+
+function stop_video() {
+  running = false;
+  webcam.stop();
+  document.getElementById('top').innerText = "Webcam closed";
+  document.getElementById('bottom').innerText = "";
+}
+
+document.getElementById("stop").addEventListener("click", function(button) {
+  stop_video();
+  button.disabled = true;
+});
 
 app();
