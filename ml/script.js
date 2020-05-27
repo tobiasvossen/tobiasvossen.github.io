@@ -20,12 +20,9 @@ async function app() {
     document.getElementById('top').innerText = "Webcam open";
     const result = await net.classify(img);
 
-    document.getElementById('bottom').innerText = `
-      Prediction: ${result[0].className}\n
-      Probability: ${result[0].probability}
-    `;
+    document.getElementById('pred').innerText = `Prediction: ${result[0].className}`;
+    document.getElementById('prob').innerText = `Probability: ${result[0].probability}`;
 
-    // Dispose the tensor to release the memory.
     img.dispose();
     await tf.nextFrame();
   }
@@ -35,7 +32,6 @@ function stop_video() {
   running = false;
   webcam.stop();
   document.getElementById('top').innerText = "Webcam closed";
-  document.getElementById('bottom').innerText = "No prediction";
 }
 
 document.getElementById("stop").addEventListener("click", function(button) {
