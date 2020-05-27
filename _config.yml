@@ -1,5 +1,3 @@
 theme: jekyll-theme-slate
-
-layout: page
-title: "ML"
-permalink: /ml/index.html
+url: https://tobiasvossen.github.io 
+baseurl: /ml
