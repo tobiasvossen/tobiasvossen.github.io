@@ -1,3 +1,7 @@
 theme: jekyll-theme-slate
 url: https://tobiasvossen.github.io/ml
 baseurl: /ml
+
+---
+permalink: /404.html
+---
