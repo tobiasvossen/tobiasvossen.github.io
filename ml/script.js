@@ -6,18 +6,23 @@ const config = {
   }
 };
 
-var webcam;
-var running = true;
+let net;
+let webcam;
 
-async function app() {
+async function initialize() {
   document.getElementById('top').innerText = "Loading MobileNet...";
-  let net = await mobilenet.load();
+  net = await mobilenet.load();
   document.getElementById('top').innerText = "MobileNet ready";
+  document.getElementById("start").disabled = false;
+}
 
+async function start() {
   webcam = await tf.data.webcam(video, config);
-  while (running) {
+  document.getElementById('top').innerText = "Webcam open";
+  document.getElementById("start").disabled = true;
+  document.getElementById("stop").disabled = false;
+  while (true) {
     const img = await webcam.capture();
-    document.getElementById('top').innerText = "Webcam open";
     const result = await net.classify(img);
 
     document.getElementById('pred').innerText = `Prediction: ${result[0].className}`;
@@ -28,15 +33,19 @@ async function app() {
   }
 }
 
-function stop_video() {
-  running = false;
+function stop() {
   webcam.stop();
   document.getElementById('top').innerText = "Webcam closed";
+  document.getElementById("stop").disabled = true;
+  document.getElementById("start").disabled = false;
 }
 
-document.getElementById("stop").addEventListener("click", function(button) {
-  stop_video();
-  button.disabled = true;
+document.getElementById("start").addEventListener("click", function() { 
+  start();
 });
 
-app();
+document.getElementById("stop").addEventListener("click", function() {
+  stop();
+});
+
+initialize();
